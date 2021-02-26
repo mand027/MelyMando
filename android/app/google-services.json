@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "385540161648",
+    "project_id": "mel-y-mando",
+    "storage_bucket": "mel-y-mando.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385540161648:android:3a5662dc3b802d7d4074b5",
+        "android_client_info": {
+          "package_name": "com.pluscipher.mel_y_mando"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "385540161648-m3mtfbtgkivbd7kdf5134t7ossd5ga9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSeareEh36LvUy1dlX9si7ABfnUnkXrOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "385540161648-m3mtfbtgkivbd7kdf5134t7ossd5ga9r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
