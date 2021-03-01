@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mel_y_mando/Screens/Galeria/Galeria.dart';
 import 'package:mel_y_mando/Screens/chat/chat.dart';
 import 'package:mel_y_mando/Screens/chat/widget/loading.dart';
 import 'package:mel_y_mando/Services/DataBaseFix.dart';
@@ -171,13 +172,26 @@ class _HelperState extends State<Helper> {
                 height: 100.0,
                 child: RaisedButton(shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                  color: Colors.grey,
+                  color: accentColor,
                   child: Text(
                     'Abrir Galería',
                     style: TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   onPressed: ()  async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                            StreamProvider<UserData>.value(
+                                value: DatabaseServiceF(uid: currentId).Thisuser,
+                                child: GaleriaList(
+                                  peerId: peerId,
+                                  currentId: currentId,
+                                )
+                            )
+                        )
+                    );
                   },
                 )
               ),

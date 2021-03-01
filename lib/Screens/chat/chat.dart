@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:mel_y_mando/Services/DataBaseFix.dart';
 import 'package:mel_y_mando/screens/chat/const.dart';
 import 'package:mel_y_mando/screens/chat/widget/full_photo.dart';
 import 'package:mel_y_mando/screens/chat/widget/loading.dart';
@@ -179,14 +179,16 @@ class ChatScreenState extends State<ChatScreen> {
 
   Future uploadFile() async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference reference = FirebaseStorage.instance.ref().child("$currentId-$peerId/$fileName");
+    StorageReference reference = FirebaseStorage.instance.ref().child("kwL4hNyQXthTGIxm6dIuV5FNu3F3-xFuRlESDQdfkp8uj9bO2JiymUr12/$fileName");
     StorageUploadTask uploadTask = reference.putFile(imageFile);
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) async {
       imageUrl = downloadUrl;
+      await DatabaseServiceF(uid: currentId, otheruid: peerId).addPhotos(imageUrl);
       setState(() {
         isLoading = false;
         onSendMessage(imageUrl, 1);
+
       });
     }, onError: (err) {
       setState(() {

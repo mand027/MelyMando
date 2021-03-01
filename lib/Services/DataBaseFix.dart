@@ -1,6 +1,5 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mel_y_mando/models/userdata.dart';
 
 class DatabaseServiceF {
@@ -23,6 +22,7 @@ class DatabaseServiceF {
       ouid: snapshot.data()['idPareja'] ?? '',
       uid: snapshot.id,
     );
+    user.fotoURLS = snapshot.data()['fotos'] ?? List<dynamic>();
     return user;
   }
 
@@ -76,19 +76,16 @@ class DatabaseServiceF {
     }, SetOptions(merge: true));
   }
 
-  Future updatePhotos(String updateThisImage) async{
-
-    final ref = FirebaseStorage.instance.ref().child(uid).child("documentos").child("$updateThisImage");
+  Future addPhotos(String url) async{
+    var list = List<String>();
+    list.add(url);
     // no need of the file extension, the name will do fine.
-    String refUrl = "";
-    await ref.getDownloadURL().then((value) =>
-    refUrl = value
-    ).catchError((e){
-      print("Error getting image data: ${e.error}");
-    });
+    await usersCollection.doc(uid).set({
+      'fotos': FieldValue.arrayUnion(list),
+    }, SetOptions(merge: true));
 
-    return await usersCollection.doc(uid).set({
-      'Ref$updateThisImage': refUrl,
+    return await usersCollection.doc(otheruid).set({
+      'fotos': FieldValue.arrayUnion(list),
     }, SetOptions(merge: true));
   }
 

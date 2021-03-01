@@ -29,14 +29,15 @@ exports.sendNotificationChat = functions.firestore
           const auxTargetToken = userTo.data().pushToken
           if (auxTargetToken !== idFrom) {
             // Get info user from (sent)
+            console.log('tratare de conseguir userfrom')
             admin
               .firestore()
               .collection('users')
-              .doc('id', '==', idFrom)
+              .where('id', '==', idFrom)
               .get()
               .then(querySnapshot2 => {
                 querySnapshot2.forEach(userFrom => {
-                  console.log('----------------test1--------------------')
+                  console.log('----------------test2--------------------')
                   console.log(`Found user from: ${userFrom.data().nombre}`)
                   console.log(`Found user from Push Token: ${userTo.data().pushToken}`)
                   const payload = {
