@@ -29,10 +29,11 @@ class _GaleriaListState extends State<GaleriaList> {
   File imageFile;
   bool isLoading = false;
   String imageUrl;
+  int columns = 2;
 
   Future uploadImg() async{
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child("kwL4hNyQXthTGIxm6dIuV5FNu3F3-xFuRlESDQdfkp8uj9bO2JiymUr12/$fileName");
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child("kwL4hNyQXthTGIxm6dIuV5FNu3F3-xFuRlESDQdfkp8uj9bO2JiymUr12/$fileName.jpg");
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(imageFile);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     taskSnapshot.ref.getDownloadURL().then((downloadUrl) async {
@@ -101,6 +102,7 @@ class _GaleriaListState extends State<GaleriaList> {
     UserData misDatos = Provider.of<UserData>(context);
     List<dynamic> photos = misDatos.fotoURLS;
 
+
     var itemCountHelp = 0;
     if(photos.length == null) itemCountHelp = 0;
     else itemCountHelp = photos.length;
@@ -109,6 +111,37 @@ class _GaleriaListState extends State<GaleriaList> {
       return Loading();
     }else {
       return Scaffold(
+          floatingActionButton: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  child: Icon(
+                      Icons.zoom_in
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      if(columns == 1) columns = 1;
+                      else columns -=1;
+                    });
+                  },
+                  heroTag: null,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                FloatingActionButton(
+                  child: Icon(
+                      Icons.zoom_out
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      columns += 1;
+                    });
+                  },
+                  heroTag: null,
+                )
+              ]
+          ),
           appBar: AppBar(
               iconTheme: IconThemeData(color: Colors.white),
               titleSpacing: 18.0,
@@ -126,7 +159,7 @@ class _GaleriaListState extends State<GaleriaList> {
                       child: FlatButton.icon(
                         label: Text('Subir Foto',
                             style:
-                                TextStyle(color: Colors.white, fontSize: 10)),
+                            TextStyle(color: Colors.white, fontSize: 10)),
                         onPressed: () async {
                           ImageSelectOption(context);
                         },
@@ -137,23 +170,17 @@ class _GaleriaListState extends State<GaleriaList> {
                       ),
                     )
                   ])),
-          body: itemCountHelp > 0
-              ? GridView.count(
-            // Create a grid with 2 columns. If you change the scrollDirection to
-            // horizontal, this produces 2 rows.
-              crossAxisCount: 2,
-              // Generate 100 widgets that display their index in the List.
-              children: List.generate(itemCountHelp, (index) {
-                return Center(
-                    child: photoTile(
-                      imgurl: photos[(index)])
-                );
-              },
+          body: itemCountHelp > 0 ? GridView.count(
+                crossAxisCount: columns,
+                children: List.generate(itemCountHelp, (index) {
+                  return Center(
+                    child: photoTile(imgurl: photos[(index)])
+                  );
+                },
               )
+          ) : Center(
+            child: Text("Aun no hay fotos"),
           )
-              : Center(
-                  child: Text("Aun no hay fotos"),
-                )
       );
     }
   }

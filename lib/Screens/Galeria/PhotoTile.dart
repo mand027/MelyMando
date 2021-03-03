@@ -11,15 +11,10 @@ class photoTile extends StatelessWidget {
     return Container(
 
       child: Card(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
+        child:
             Padding(
               padding: const EdgeInsets.all(1),
               child: SizedBox(
-                    height: 175,
-                    width: 350,
                     child: GestureDetector(
                       onTap: (){
                         Navigator.push(context,
@@ -32,8 +27,6 @@ class photoTile extends StatelessWidget {
                     )
                   )
             ),
-          ],
-        ),
       ),
     );
   }

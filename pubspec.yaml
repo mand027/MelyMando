@@ -45,7 +45,9 @@ dependencies:
   in_app_purchase: ^0.3.4+3
   mailto: ^1.0.0
   url_launcher: ^5.5.1
-
+  flutter_downloader: ^1.5.2
+  image_gallery_saver: ^1.6.8
+  dio: ^3.0.10
 
 dev_dependencies:
   flutter_test:
