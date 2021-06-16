@@ -240,7 +240,7 @@ class ChatScreenState extends State<ChatScreen> {
               style: TextStyle(color: primaryColor),
             ),
             padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-            width: 200.0,
+            width: 250.0,
             decoration: BoxDecoration(color: greyColor2, borderRadius: BorderRadius.circular(8.0)),
             margin: EdgeInsets.only(bottom: isLastMessageRight(index) ? 20.0 : 10.0, right: 10.0),
           )
@@ -327,7 +327,7 @@ class ChatScreenState extends State<ChatScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                   padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                  width: 200.0,
+                  width: 250.0,
                   decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(8.0)),
                   margin: EdgeInsets.only(left: 10.0),
                 )

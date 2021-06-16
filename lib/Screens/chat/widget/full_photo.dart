@@ -1,11 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
-import 'dart:io';
-import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 
 class FullPhoto extends StatelessWidget {
@@ -21,13 +20,19 @@ class FullPhoto extends StatelessWidget {
     }
 
     void _saveNetworkImage() async {
+      await Permission.storage.request();
+      var status = await Permission.storage.status;
+      if (status.isGranted) {
+        var appDocDir = await getTemporaryDirectory();
+        String savePath = appDocDir.path + "/foto.jpg";
+        await Dio().download(url, savePath);
+        final result = await ImageGallerySaver.saveFile(savePath);
+        print(result);
+        if(result.toString().contains("true")){
+          _toastInfo("foto guardada en galeria");
+        }
+      }
 
-      var appDocDir = await getTemporaryDirectory();
-      String savePath = appDocDir.path + "foto.jpg";
-      await Dio().download(url, savePath);
-      final result = await ImageGallerySaver.saveFile(savePath);
-      print(result);
-      _toastInfo("foto descargada en galeria");
     }
 
     return Scaffold(
@@ -37,7 +42,7 @@ class FullPhoto extends StatelessWidget {
             Expanded(
               child: Center(
                 child:
-                Text('Foto completa'), //cambiar por logo nuev
+                Text('Foto completa'),
               ),
             ),
             Expanded(
@@ -83,6 +88,9 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: PhotoView(imageProvider: NetworkImage(url)));
+    return Container(
+        child:
+        PhotoView(imageProvider: CachedNetworkImageProvider(url))
+    );
   }
 }

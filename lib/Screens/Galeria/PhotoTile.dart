@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mel_y_mando/Screens/chat/widget/full_photo.dart';
 
@@ -22,7 +23,10 @@ class photoTile extends StatelessWidget {
                       },
                       child:
                       imgurl!= null ?
-                      Image.network(imgurl):
+                      CachedNetworkImage(
+                        placeholder: (context, url) => CircularProgressIndicator(),
+                        imageUrl: imgurl,
+                      ):
                       Text(imgurl),
                     )
                   )

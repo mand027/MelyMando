@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mel_y_mando/Screens/Galeria/Galeria.dart';
+import 'package:mel_y_mando/Screens/ToDoList/ToDoHome.dart';
 import 'package:mel_y_mando/Screens/chat/chat.dart';
+import 'package:mel_y_mando/Screens/chat/const.dart';
 import 'package:mel_y_mando/Screens/chat/widget/loading.dart';
 import 'package:mel_y_mando/Services/DataBaseFix.dart';
 import 'package:mel_y_mando/Services/auth.dart';
@@ -40,6 +43,107 @@ class Helper extends StatefulWidget {
 }
 
 class _HelperState extends State<Helper> {
+
+
+  bool cerrarOpcion = false;
+  var genero = '';
+  var lst = ['Accion','Aventura','Catastrofe','Ciencia Ficcion','Documental', 'Drama', 'Fantasia', 'Musical', 'Suspenso', 'Terror', 'Animada', 'Anime', 'Serie', 'Romance', 'Comedia', 'Independiente', 'Superheroes', 'Basada en Libro'];
+
+  var tipo = '';
+  var lst2 = ['Arabe','Japonesa','Carnes','China','Hamburguesa', 'Italiana', 'Asiatica', 'Mexicana', 'Pizza', 'Pollo (kfc, carbon...)', 'Tacos', 'Alitas', 'Sushi', 'Tortas (algo con pan)', 'Europea', 'Americana'];
+
+  ImageSelectOption(BuildContext context) {
+    var accentColor = Theme.of(context).primaryColor;
+
+    if(cerrarOpcion == true){
+      Navigator.pop(context);
+      cerrarOpcion = false;
+    }
+    return showDialog(context: context, builder: (context){
+      return AlertDialog(
+        title: Text(
+            'Hoy Toca:'
+        ),
+        content:
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.camera_roll_outlined,
+                  color: primaryColor,
+                ),
+                SizedBox(width: 10),
+                Text(genero,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    maxLines: 20,
+                  ),
+                SizedBox(width: 10),
+                Icon(
+                    Icons.camera_roll_outlined,
+                    color: primaryColor,
+                  ),
+              ],
+          ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Salir'),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    });
+  }
+
+  ImageSelectOption2(BuildContext context) {
+    var accentColor = Theme.of(context).primaryColor;
+
+    if(cerrarOpcion == true){
+      Navigator.pop(context);
+      cerrarOpcion = false;
+    }
+    return showDialog(context: context, builder: (context){
+      return AlertDialog(
+        title: Text(
+            'Hoy Comemos:'
+        ),
+        content:
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.local_restaurant_outlined,
+              color: primaryColor,
+            ),
+            SizedBox(width: 10),
+            Text(tipo,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              maxLines: 20,
+            ),
+            SizedBox(width: 10),
+            Icon(
+              Icons.local_restaurant_outlined,
+              color: primaryColor,
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Salir'),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    });
+  }
+
   _HelperState({Key key, @required this.misDatos});
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -86,8 +190,8 @@ class _HelperState extends State<Helper> {
 
   void showNotification(message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-      Platform.isAndroid ? 'com.segov.drivermatch' : 'com.segov.drivermatch',
-      'Driver Match',
+      Platform.isAndroid ? 'com.pluscipher.mel_y_mando' : 'com.pluscipher.mel_y_mando',
+      'Mel y Mando',
       'Prueba',
       playSound: true,
       enableVibration: true,
@@ -118,7 +222,7 @@ class _HelperState extends State<Helper> {
 
       // Get the token for this device
       String fcmToken = await _fcm.getToken();
-      print("Tokeeeeeeen: $fcmToken");
+      //print("Tokeeeeeeen: $fcmToken");
 
       // Save it to Firestore
       await DatabaseServiceF(uid: currentId).TokenDevice(fcmToken);
@@ -232,13 +336,14 @@ class _HelperState extends State<Helper> {
                 height: 100.0,
                 child:RaisedButton(shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                  color: Colors.grey,
+                  color: accentColor,
                   child: Text(
                     'Cosas para hacer',
                     style: TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   onPressed: ()  async {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => toDoHome()));
                   },
                 )
               ),
@@ -248,15 +353,68 @@ class _HelperState extends State<Helper> {
                 height: 100.0,
                 child: RaisedButton(shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                  color: Colors.grey,
+                  color: accentColor,
                   child: Text(
-                    'Abasho virtual',
+                    'Genero de peli \nrandom',
                     style: TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   onPressed: ()  async {
+                    Random rnd = new Random();
+                    var element = lst[rnd.nextInt(lst.length)];
+                    print(element); // e.g. 'Louis'
+                    setState(() {
+                      genero = element;
+                    });
+                    ImageSelectOption(context);
                   },
                 )
+              )
+            ],
+          ),
+          SizedBox(height: 50),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ButtonTheme(
+                  minWidth: 150.0,
+                  height: 100.0,
+                  child:RaisedButton(shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                    color: Colors.deepOrangeAccent,
+                    child: Text(
+                      'Abasho Virtual',
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: () {
+                    DatabaseServiceF(otheruid: peerId).MasAbrazo();
+                    },
+                  )
+              ),
+              SizedBox(width: 30),
+              ButtonTheme(
+                  minWidth: 150.0,
+                  height: 100.0,
+                  child: RaisedButton(shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                    color: accentColor,
+                    child: Text(
+                      'Tipo de Comida \nrandom',
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: ()  async {
+                      Random rnd = new Random();
+                      var element = lst2[rnd.nextInt(lst2.length)];
+                      print(element); // e.g. 'Louis'
+                      setState(() {
+                        tipo = element;
+                      });
+                      ImageSelectOption2(context);
+                    },
+                  )
               )
             ],
           )

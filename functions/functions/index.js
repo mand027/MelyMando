@@ -66,4 +66,39 @@ exports.sendNotificationChat = functions.firestore
         })
       })
     return null
-  })
+  }
+  )
+
+  exports.sendNotificationMatch = functions.firestore.document('users/{userId}').onUpdate((change, context) => {
+    console.log('----------------start function Matches--------------------')
+    const newValue = change.after.data()
+    const oldValue = change.before.data()
+
+    const matchesBefore = oldValue.abrazos
+    const matchesAfter = newValue.abrazos
+    const pushTokenMatch = oldValue.pushToken
+
+    if (matchesAfter !== matchesBefore && matchesBefore !== null && matchesAfter !== null) {
+      const payload = {
+        notification: {
+          title: `Abrazoooo:`,
+          body: "Te mando un abrazote",
+          badge: '1',
+          sound: 'default'
+        }
+      }
+
+      admin
+        .messaging()
+        .sendToDevice(pushTokenMatch, payload)
+        .then(response => {
+          console.log('Successfully sent hug:', response)
+        })
+        .catch(error => {
+          console.log('Error sending hug:', error)
+        })
+    } else {
+      console.log('Un error pasó')
+    }
+  }
+  )

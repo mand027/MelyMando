@@ -174,7 +174,7 @@ class _GaleriaListState extends State<GaleriaList> {
                 crossAxisCount: columns,
                 children: List.generate(itemCountHelp, (index) {
                   return Center(
-                    child: photoTile(imgurl: photos[(index)])
+                    child: photoTile(imgurl: photos[(itemCountHelp-index-1)])
                   );
                 },
               )

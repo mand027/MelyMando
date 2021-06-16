@@ -1,5 +1,5 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mel_y_mando/models/TaskToDo.dart';
 import 'package:mel_y_mando/models/userdata.dart';
 
 class DatabaseServiceF {
@@ -13,6 +13,7 @@ class DatabaseServiceF {
   //collection reference
   //Users
   final CollectionReference usersCollection = FirebaseFirestore.instance.collection("users");
+  final CollectionReference toDoCollection = FirebaseFirestore.instance.collection("toDo");
 
 //Get Thisuser data
   UserData _ThisUserSnapshot(DocumentSnapshot snapshot){
@@ -33,6 +34,26 @@ class DatabaseServiceF {
 
   Stream<UserData> get parejaUser{
     return usersCollection.doc(otheruid).snapshots().map(_ThisUserSnapshot);
+  }
+
+  //Get tasks data
+  List<Task> _taskListFromSnapshot(QuerySnapshot snapshot){
+    return snapshot.docs.map((task){
+      return Task(
+          description: task.data()['descripcion'] ?? '',
+          isDone: task.data()['isDone'] ?? '',
+          id: task.id ?? ''
+      );
+    }).toList();
+  }
+
+  //Get mis autos stream
+  Stream<List<Task>> get tasksNotDone{
+    return toDoCollection.where('isDone', isEqualTo: false).snapshots().map(_taskListFromSnapshot);
+  }
+
+  Stream<List<Task>> get tasksDone{
+    return toDoCollection.where('isDone', isEqualTo: true).snapshots().map(_taskListFromSnapshot);
   }
 
   //Update user
@@ -86,6 +107,25 @@ class DatabaseServiceF {
 
     return await usersCollection.doc(otheruid).set({
       'fotos': FieldValue.arrayUnion(list),
+    }, SetOptions(merge: true));
+  }
+
+  Future addTask(String descripcion) async{
+    return await toDoCollection.doc().set({
+      'descripcion': descripcion,
+      'isDone' : false,
+    }, SetOptions(merge: true));
+  }
+
+  Future setTaskDoneUndone(String id, bool newState) async{
+    return await toDoCollection.doc(id).set({
+      'isDone' : newState,
+    }, SetOptions(merge: true));
+  }
+
+  Future MasAbrazo() async {
+    return await usersCollection.doc(otheruid).set({
+      'abrazos': FieldValue.increment(1),
     }, SetOptions(merge: true));
   }
 
