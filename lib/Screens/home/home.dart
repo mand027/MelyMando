@@ -50,7 +50,7 @@ class _HelperState extends State<Helper> {
   var lst = ['Accion','Aventura','Catastrofe','Ciencia Ficcion','Documental', 'Drama', 'Fantasia', 'Musical', 'Suspenso', 'Terror', 'Animada', 'Anime', 'Serie', 'Romance', 'Comedia', 'Independiente', 'Superheroes', 'Basada en Libro'];
 
   var tipo = '';
-  var lst2 = ['Arabe','Japonesa','Carnes','China','Hamburguesa', 'Italiana', 'Asiatica', 'Mexicana', 'Pizza', 'Pollo (kfc, carbon...)', 'Tacos', 'Alitas', 'Sushi', 'Tortas (algo con pan)', 'Europea', 'Americana'];
+  var lst2 = ['Tex Mex','BBQ','Ramen','Arabe','Japonesa','Carnes','China','Hamburguesa', 'Italiana', 'Taiwanesa', 'Yucateca', 'Oaxaqueña', 'Bajio', 'Norteña', 'Qesadillas (masaoso)', 'Dinner Mexicano', 'Pizza', 'Pollo (kfc, carbon...)', 'Tacos', 'Alitas', 'Sushi', 'Tortas (algo con pan)', 'Europea', 'Americana', 'Griega', 'Española', 'Brasileña', 'Koreana', 'India', 'Comida Corrida'];
 
   ImageSelectOption(BuildContext context) {
     var accentColor = Theme.of(context).primaryColor;
