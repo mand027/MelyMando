@@ -1,16 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mel_y_mando/Services/DataBaseFix.dart';
-import 'package:mel_y_mando/models/TaskToDo.dart';
+import 'package:melymando2/Services/DataBaseFix.dart';
+import 'package:melymando2/models/TaskToDo.dart';
 
 class AddNewTask extends StatefulWidget {
+  const AddNewTask({super.key});
 
   @override
   _AddNewTaskState createState() => _AddNewTaskState();
 }
 
 class _AddNewTaskState extends State<AddNewTask> {
-  Task task;
+  late Task task;
   String _inputDescription = '';
   final _formKey = GlobalKey<FormState>();
   String error = '';
@@ -21,22 +21,32 @@ class _AddNewTaskState extends State<AddNewTask> {
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      foregroundColor: Colors.white,
+      minimumSize: const Size(88, 44),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+      backgroundColor: Colors.blue,
+    );
+
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Descripcion', style: Theme.of(context).textTheme.subtitle),
+            Text('Descripcion', style: Theme.of(context).textTheme.titleSmall),
             TextFormField(
               initialValue:
-              _inputDescription == null ? null : _inputDescription,
-              decoration: InputDecoration(
+                  _inputDescription == null ? null : _inputDescription,
+              decoration: const InputDecoration(
                 hintText: 'Qué haremos?',
               ),
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return 'No puede estar vacio';
                 }
                 return null;
@@ -47,13 +57,13 @@ class _AddNewTaskState extends State<AddNewTask> {
                 });
               },
             ),
-            SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Container(
               alignment: Alignment.bottomRight,
-              child: FlatButton(
-                child: Text('Agregar!',
+              child: TextButton(
+                style: flatButtonStyle,
+                child: Text(
+                  'Agregar!',
                   style: TextStyle(
                       color: Theme.of(context).accentColor,
                       fontFamily: 'Lato',
@@ -61,21 +71,20 @@ class _AddNewTaskState extends State<AddNewTask> {
                       fontWeight: FontWeight.bold),
                 ),
                 onPressed: () async {
-                  if(_inputDescription.isNotEmpty){
+                  if (_inputDescription.isNotEmpty) {
                     await DatabaseServiceF().addTask(_inputDescription);
                     Navigator.of(context).pop();
-                  }
-                  else{
-                    setState(() {
-                      error = 'no puede estar vacío';
-                    });
+                  } else {
+                    setState(
+                      () {
+                        error = 'no puede estar vacío';
+                      },
+                    );
                   }
                 },
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             Center(
               child: Text(error),
             )

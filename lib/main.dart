@@ -1,21 +1,26 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:melymando2/Screens/wrapper.dart';
+import 'package:melymando2/Services/auth.dart';
+import 'package:melymando2/models/user.dart';
 import 'package:provider/provider.dart';
-import 'package:mel_y_mando/models/user.dart';
-import 'package:mel_y_mando/Screens/wrapper.dart';
-import 'package:mel_y_mando/Services/auth.dart';
 
-Future<void> main()  async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User>.value(
+    return StreamProvider<User?>.value(
+      //affect all widgets below this
+      value: AuthService().user,
+      initialData: null,
       //affect all widgets below this
       child: MaterialApp(
         theme: ThemeData(
@@ -25,7 +30,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Wrapper(),
       ),
-      value: AuthService().user
     );
   }
 }

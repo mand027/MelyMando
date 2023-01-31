@@ -1,20 +1,21 @@
-import 'package:mel_y_mando/Screens/chat/widget/loading.dart';
-import 'package:mel_y_mando/Services/DataBaseFix.dart';
-import 'package:mel_y_mando/Services/auth.dart';
-import 'package:mel_y_mando/Screens/home/home.dart';
+import 'package:melymando2/Screens/chat/widget/loading.dart';
+import 'package:melymando2/Services/DataBaseFix.dart';
+import 'package:melymando2/Services/auth.dart';
+import 'package:melymando2/Screens/home/home.dart';
 import 'package:flutter/material.dart';
-import 'package:mel_y_mando/Shared/customstyles.dart';
+import 'package:melymando2/Shared/customstyles.dart';
 
 class Register extends StatefulWidget {
+  const Register({super.key});
+
   @override
   _RegisterState createState() => _RegisterState();
 }
 
-
 class _RegisterState extends State<Register> {
-  TextStyle subTitleStyle = TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
-  TextStyle normalStyle = TextStyle(color: Colors.black);
-
+  TextStyle subTitleStyle =
+      const TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
+  TextStyle normalStyle = const TextStyle(color: Colors.black);
 
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>(); //for validation
@@ -34,7 +35,7 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     var primaryColor = Theme.of(context).primaryColor;
     if (loading) {
-      return Loading();
+      return const Loading();
     } else if (secondForm) {
       return WillPopScope(
         onWillPop: () async => false,
@@ -50,7 +51,7 @@ class _RegisterState extends State<Register> {
           ),
           body: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
               child: Form(
                 key: _secondFormKey, //associate
                 child: Column(
@@ -68,11 +69,11 @@ class _RegisterState extends State<Register> {
                     SizedBox(height: MediaQuery.of(context).size.height * 0.07),
                     TextFormField(
                       decoration:
-                      textInputDecoration.copyWith(hintText: 'Nombre'),
+                          textInputDecoration.copyWith(hintText: 'Nombre'),
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
                       validator: (val) {
-                        if (val.isEmpty) {
+                        if (val!.isEmpty) {
                           return 'El campo está vacío.';
                         } else {
                           return null;
@@ -80,19 +81,21 @@ class _RegisterState extends State<Register> {
                       },
                       onChanged: (val) {
                         //val is the form input content
-                        setState(() {
-                          name = val.trim();
-                        });
+                        setState(
+                          () {
+                            name = val.trim();
+                          },
+                        );
                       },
                     ),
-                    SizedBox(height: 32),
+                    const SizedBox(height: 32),
                     TextFormField(
                       textCapitalization: TextCapitalization.sentences,
-                      decoration: textInputDecoration.copyWith(
-                          hintText: 'Mail Pareja'),
+                      decoration:
+                          textInputDecoration.copyWith(hintText: 'Mail Pareja'),
                       keyboardType: TextInputType.text,
                       validator: (val) {
-                        if (val.isEmpty) {
+                        if (val!.isEmpty) {
                           return 'El campo está vacío.';
                         } else {
                           return null;
@@ -104,55 +107,69 @@ class _RegisterState extends State<Register> {
                         });
                       },
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     Row(
                       children: <Widget>[
                         Expanded(
                           flex: 2,
-                          child: OutlineButton(
+                          child: MaterialButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
-                            borderSide: BorderSide(color: primaryColor, width: 2),
                             child: Text(
                               'Atrás',
                               style: TextStyle(color: primaryColor),
                             ),
                             onPressed: () {
-                              setState(() {
-                                secondForm = false;
-                              });
+                              setState(
+                                () {
+                                  secondForm = false;
+                                },
+                              );
                             },
                           ),
                         ),
-                        Expanded(
+                        const Expanded(
                           flex: 1,
                           child: SizedBox(),
                         ),
                         Expanded(
                           flex: 2,
-                          child: RaisedButton(
+                          child: MaterialButton(
                             color: primaryColor,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Text(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Text(
                               'Registrate',
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () async {
-                              if (_secondFormKey.currentState.validate()) {
-                                setState(() {
-                                  loading = true;
-                                });
-                                dynamic result = await _authService.registerWithEmailAndPassword(email.trim(), password);
+                              if (_secondFormKey.currentState!.validate()) {
+                                setState(
+                                  () {
+                                    loading = true;
+                                  },
+                                );
+                                dynamic result = await _authService
+                                    .registerWithEmailAndPassword(
+                                        email.trim(), password);
                                 if (result == null) {
-                                  setState(() {
-                                    error =
-                                    'Error al crear usuario. Revisa que los datos sean correctos y que haya conexión a la red.';
-                                    loading = false;
-                                  });
+                                  setState(
+                                    () {
+                                      error =
+                                          'Error al crear usuario. Revisa que los datos sean correctos y que haya conexión a la red.';
+                                      loading = false;
+                                    },
+                                  );
                                 } else {
-                                  await DatabaseServiceF(uid: result.uid).UpdateUserData(name, mailPareja, email);
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
+                                  await DatabaseServiceF(uid: result.uid)
+                                      .UpdateUserData(name, mailPareja, email);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Home(),
+                                    ),
+                                  );
                                 }
                               }
                             },
@@ -160,13 +177,13 @@ class _RegisterState extends State<Register> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     Center(
                       child: Text(
                         error,
-                        style: TextStyle(color: Colors.redAccent),
+                        style: const TextStyle(color: Colors.redAccent),
                       ),
                     )
                   ],
@@ -189,7 +206,7 @@ class _RegisterState extends State<Register> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
             child: Form(
               key: _formKey, //associate
               child: Column(
@@ -204,15 +221,14 @@ class _RegisterState extends State<Register> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  SizedBox(height: 64),
+                  const SizedBox(height: 64),
                   TextFormField(
                     decoration: textInputDecoration,
                     keyboardType: TextInputType.emailAddress,
                     validator: (val) {
-                      Pattern pattern =
-                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                      RegExp regex = new RegExp(pattern);
-                      if (val.isEmpty) {
+                      RegExp regex = RegExp(
+                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+                      if (val!.isEmpty) {
                         return 'El campo está vacío.';
                       } else if (!regex.hasMatch(val)) {
                         return 'El email no es válido';
@@ -227,14 +243,14 @@ class _RegisterState extends State<Register> {
                       });
                     },
                   ),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
                   TextFormField(
                     decoration:
-                    textInputDecoration.copyWith(hintText: 'Contraseña'),
+                        textInputDecoration.copyWith(hintText: 'Contraseña'),
                     keyboardType: TextInputType.text,
                     obscureText: true,
                     validator: (val) {
-                      if (val.isEmpty) {
+                      if (val!.isEmpty) {
                         return 'El campo está vacío.';
                       } else if (val.length < 8) {
                         return 'La contraseña debe ser de mínimo 8 caracteres.';
@@ -243,36 +259,41 @@ class _RegisterState extends State<Register> {
                       }
                     },
                     onChanged: (val) {
-                      setState(() {
-                        password = val.trim();
-                      });
+                      setState(
+                        () {
+                          password = val.trim();
+                        },
+                      );
                     },
                   ),
-                  SizedBox(height: 24),
-                  RaisedButton(
+                  const SizedBox(height: 24),
+                  MaterialButton(
                     color: primaryColor,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 64),
-                    child: Text(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 64),
+                    child: const Text(
                       'Siguiente',
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        setState(() {
-                          secondForm = true;
-                        });
+                      if (_formKey.currentState!.validate()) {
+                        setState(
+                          () {
+                            secondForm = true;
+                          },
+                        );
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Center(
                     child: Text(
                       error,
-                      style: TextStyle(color: Colors.redAccent),
+                      style: const TextStyle(color: Colors.redAccent),
                     ),
                   )
                 ],

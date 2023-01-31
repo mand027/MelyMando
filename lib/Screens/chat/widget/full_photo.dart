@@ -10,11 +10,10 @@ import 'package:path_provider/path_provider.dart';
 class FullPhoto extends StatelessWidget {
   final String url;
 
-  FullPhoto({Key key, @required this.url}) : super(key: key);
+  const FullPhoto({Key? key, required this.url}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     void _toastInfo(String info) {
       Fluttertoast.showToast(msg: info, toastLength: Toast.LENGTH_LONG);
     }
@@ -24,34 +23,44 @@ class FullPhoto extends StatelessWidget {
       var status = await Permission.storage.status;
       if (status.isGranted) {
         var appDocDir = await getTemporaryDirectory();
-        String savePath = appDocDir.path + "/foto.jpg";
+        String savePath = "${appDocDir.path}/foto.jpg";
         await Dio().download(url, savePath);
         final result = await ImageGallerySaver.saveFile(savePath);
         print(result);
-        if(result.toString().contains("true")){
+        if (result.toString().contains("true")) {
           _toastInfo("foto guardada en galeria");
         }
       }
-
     }
+
+    final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      foregroundColor: Colors.white,
+      minimumSize: const Size(88, 44),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+      backgroundColor: Colors.blue,
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: <Widget>[
-            Expanded(
+            const Expanded(
               child: Center(
-                child:
-                Text('Foto completa'),
+                child: Text('Foto completa'),
               ),
             ),
             Expanded(
-              child:  FlatButton.icon(
-                label: Text('', style: TextStyle(color: Colors.white, fontSize: 10)),
+              child: TextButton.icon(
+                style: flatButtonStyle,
+                label: const Text('',
+                    style: TextStyle(color: Colors.white, fontSize: 10)),
                 onPressed: () async {
                   _saveNetworkImage();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.file_download,
                   color: Colors.white,
                 ),
@@ -67,10 +76,9 @@ class FullPhoto extends StatelessWidget {
 }
 
 class FullPhotoScreen extends StatefulWidget {
-
   final String url;
 
-  FullPhotoScreen({Key key, @required this.url}) : super(key: key);
+  const FullPhotoScreen({Key? key, required this.url}) : super(key: key);
 
   @override
   State createState() => FullPhotoScreenState(url: url);
@@ -79,7 +87,7 @@ class FullPhotoScreen extends StatefulWidget {
 class FullPhotoScreenState extends State<FullPhotoScreen> {
   final String url;
 
-  FullPhotoScreenState({Key key, @required this.url});
+  FullPhotoScreenState({Key? key, required this.url});
 
   @override
   void initState() {
@@ -88,9 +96,6 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child:
-        PhotoView(imageProvider: CachedNetworkImageProvider(url))
-    );
+    return PhotoView(imageProvider: CachedNetworkImageProvider(url));
   }
 }
